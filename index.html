@@ -6,326 +6,1849 @@
   <meta name="theme-color" content="#111111">
   <link rel="manifest" href="manifest.json">
   <title>My AI Wordbook</title>
+
   <style>
-    :root{--bg:#f6f6f6;--card:#fff;--text:#111;--muted:#777;--line:#ddd;--accent:#111;--good:#1d7a46;--mid:#a56b00;--bad:#b42318}
-    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-    body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif}
-    button,input,select{font:inherit}
-    button{border:0}
-    .app{max-width:680px;margin:auto;min-height:100dvh;padding-bottom:88px}
-    header{padding:calc(18px + env(safe-area-inset-top)) 18px 14px;background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
-    h1{font-size:20px;margin:0;font-weight:750}
-    .sub{color:var(--muted);font-size:12px;margin-top:4px}
-    main{padding:16px}
-    .screen{display:none}.screen.active{display:block}
-    .panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px}
-    .hero{padding:24px 18px}
-    .word{font-size:38px;font-weight:800;letter-spacing:-.02em;text-align:center;word-break:break-word}
-    .tap{color:var(--muted);font-size:12px;text-align:center;margin:12px 0}
-    .meaning{font-size:24px;font-weight:700;text-align:center;margin:18px 0}
-    .hidden{display:none!important}
-    .meta{text-align:center;color:var(--muted);font-size:13px}
-    .example{background:#fafafa;border-radius:12px;padding:14px;margin-top:18px;font-size:15px;line-height:1.6}
-    .example-ja{color:#666;margin-top:6px}
-    .speak{display:block;margin:14px auto 0;background:#f0f0f0;padding:10px 18px;border-radius:999px}
-    .rates{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px}
-    .rate{padding:14px 6px;border-radius:12px;background:#f1f1f1;font-weight:700}
-    .rate small{display:block;font-weight:500;color:#666;margin-top:3px}
-    .rate.bad{color:var(--bad)}.rate.mid{color:var(--mid)}.rate.good{color:var(--good)}
-    .primary{width:100%;background:#111;color:#fff;border-radius:12px;padding:14px;font-weight:750}
-    .secondary{background:#eee;border-radius:12px;padding:12px 14px}
-    .row{display:flex;gap:8px;align-items:center}.row>*{flex:1}
-    input,select{width:100%;border:1px solid #ccc;border-radius:12px;padding:13px;background:#fff;outline:none}
-    input:focus,select:focus{border-color:#111}
-    label{display:block;font-size:13px;font-weight:700;margin:0 0 7px}
-    .statgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-    .stat{background:#f4f4f4;border-radius:12px;padding:14px 8px;text-align:center}
-    .stat b{display:block;font-size:22px}.stat span{font-size:11px;color:#777}
-    .deck{padding:14px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:10px;align-items:center}
-    .deck:last-child{border-bottom:0}.deck b{display:block}.deck span{font-size:12px;color:#777}
-    .mini{font-size:12px;color:var(--muted)}
-    .empty{text-align:center;padding:40px 10px;color:var(--muted)}
-    .toast{position:fixed;left:16px;right:16px;bottom:86px;background:#111;color:#fff;padding:12px 14px;border-radius:12px;text-align:center;z-index:20;display:none}
-    nav{position:fixed;left:0;right:0;bottom:0;background:rgba(255,255,255,.96);backdrop-filter:blur(10px);border-top:1px solid var(--line);padding:8px max(8px,env(safe-area-inset-left)) calc(8px + env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(4,1fr);z-index:10}
-    nav button{background:transparent;color:#777;font-size:11px;padding:6px 2px}.nav-active{color:#111!important;font-weight:800}
-    .bar{height:7px;background:#eee;border-radius:999px;overflow:hidden}.bar i{display:block;height:100%;background:#111}
-    .list-item{padding:14px 0;border-bottom:1px solid var(--line)}.list-item:last-child{border-bottom:0}
-    .list-word{font-size:20px;font-weight:750}.list-meaning{font-size:14px;margin-top:4px}.tag{display:inline-block;font-size:10px;background:#eee;border-radius:999px;padding:4px 7px;margin:6px 4px 0 0}
-    .danger{color:var(--bad);background:#fff0ef}.linkbtn{background:none;padding:0;color:#555;text-decoration:underline}
-    @media(min-width:681px){nav{max-width:680px;left:50%;transform:translateX(-50%)}}
+    :root{
+      --bg:#f6f6f6;
+      --card:#fff;
+      --text:#111;
+      --muted:#777;
+      --line:#ddd;
+      --accent:#111;
+      --good:#1d7a46;
+      --mid:#a56b00;
+      --bad:#b42318
+    }
+
+    *{
+      box-sizing:border-box;
+      -webkit-tap-highlight-color:transparent
+    }
+
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--text);
+      font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif
+    }
+
+    button,input,select{
+      font:inherit
+    }
+
+    button{
+      border:0
+    }
+
+    .app{
+      max-width:680px;
+      margin:auto;
+      min-height:100dvh;
+      padding-bottom:88px
+    }
+
+    header{
+      padding:calc(18px + env(safe-area-inset-top)) 18px 14px;
+      background:#fff;
+      border-bottom:1px solid var(--line);
+      position:sticky;
+      top:0;
+      z-index:5
+    }
+
+    h1{
+      font-size:20px;
+      margin:0;
+      font-weight:750
+    }
+
+    .sub{
+      color:var(--muted);
+      font-size:12px;
+      margin-top:4px
+    }
+
+    main{
+      padding:16px
+    }
+
+    .screen{
+      display:none
+    }
+
+    .screen.active{
+      display:block
+    }
+
+    .panel{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:16px;
+      margin-bottom:14px
+    }
+
+    .hero{
+      padding:24px 18px
+    }
+
+    .word{
+      font-size:38px;
+      font-weight:800;
+      letter-spacing:-.02em;
+      text-align:center;
+      word-break:break-word
+    }
+
+    .tap{
+      color:var(--muted);
+      font-size:12px;
+      text-align:center;
+      margin:12px 0
+    }
+
+    .meaning{
+      font-size:24px;
+      font-weight:700;
+      text-align:center;
+      margin:18px 0
+    }
+
+    .hidden{
+      display:none!important
+    }
+
+    .meta{
+      text-align:center;
+      color:var(--muted);
+      font-size:13px
+    }
+
+    .example{
+      background:#fafafa;
+      border-radius:12px;
+      padding:14px;
+      margin-top:18px;
+      font-size:15px;
+      line-height:1.6
+    }
+
+    .example-ja{
+      color:#666;
+      margin-top:6px
+    }
+
+    .speak{
+      display:block;
+      margin:14px auto 0;
+      background:#f0f0f0;
+      padding:10px 18px;
+      border-radius:999px
+    }
+
+    .rates{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:8px;
+      margin-top:16px
+    }
+
+    .rate{
+      padding:14px 6px;
+      border-radius:12px;
+      background:#f1f1f1;
+      font-weight:700
+    }
+
+    .rate small{
+      display:block;
+      font-weight:500;
+      color:#666;
+      margin-top:3px
+    }
+
+    .rate.bad{
+      color:var(--bad)
+    }
+
+    .rate.mid{
+      color:var(--mid)
+    }
+
+    .rate.good{
+      color:var(--good)
+    }
+
+    .primary{
+      width:100%;
+      background:#111;
+      color:#fff;
+      border-radius:12px;
+      padding:14px;
+      font-weight:750
+    }
+
+    .primary:disabled{
+      opacity:.5
+    }
+
+    .secondary{
+      background:#eee;
+      border-radius:12px;
+      padding:12px 14px
+    }
+
+    .row{
+      display:flex;
+      gap:8px;
+      align-items:center
+    }
+
+    .row>*{
+      flex:1
+    }
+
+    input,select{
+      width:100%;
+      border:1px solid #ccc;
+      border-radius:12px;
+      padding:13px;
+      background:#fff;
+      outline:none
+    }
+
+    input:focus,select:focus{
+      border-color:#111
+    }
+
+    label{
+      display:block;
+      font-size:13px;
+      font-weight:700;
+      margin:0 0 7px
+    }
+
+    .statgrid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:8px
+    }
+
+    .stat{
+      background:#f4f4f4;
+      border-radius:12px;
+      padding:14px 8px;
+      text-align:center
+    }
+
+    .stat b{
+      display:block;
+      font-size:22px
+    }
+
+    .stat span{
+      font-size:11px;
+      color:#777
+    }
+
+    .deck{
+      padding:14px;
+      border-bottom:1px solid var(--line);
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      align-items:center
+    }
+
+    .deck:last-child{
+      border-bottom:0
+    }
+
+    .deck b{
+      display:block
+    }
+
+    .deck span{
+      font-size:12px;
+      color:#777
+    }
+
+    .mini{
+      font-size:12px;
+      color:var(--muted)
+    }
+
+    .empty{
+      text-align:center;
+      padding:40px 10px;
+      color:var(--muted)
+    }
+
+    .toast{
+      position:fixed;
+      left:16px;
+      right:16px;
+      bottom:86px;
+      background:#111;
+      color:#fff;
+      padding:12px 14px;
+      border-radius:12px;
+      text-align:center;
+      z-index:20;
+      display:none
+    }
+
+    nav{
+      position:fixed;
+      left:0;
+      right:0;
+      bottom:0;
+      background:rgba(255,255,255,.96);
+      backdrop-filter:blur(10px);
+      border-top:1px solid var(--line);
+      padding:8px max(8px,env(safe-area-inset-left)) calc(8px + env(safe-area-inset-bottom));
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      z-index:10
+    }
+
+    nav button{
+      background:transparent;
+      color:#777;
+      font-size:11px;
+      padding:6px 2px
+    }
+
+    .nav-active{
+      color:#111!important;
+      font-weight:800
+    }
+
+    .bar{
+      height:7px;
+      background:#eee;
+      border-radius:999px;
+      overflow:hidden
+    }
+
+    .bar i{
+      display:block;
+      height:100%;
+      background:#111
+    }
+
+    .list-item{
+      padding:14px 0;
+      border-bottom:1px solid var(--line)
+    }
+
+    .list-item:last-child{
+      border-bottom:0
+    }
+
+    .list-word{
+      font-size:20px;
+      font-weight:750
+    }
+
+    .list-meaning{
+      font-size:14px;
+      margin-top:4px
+    }
+
+    .tag{
+      display:inline-block;
+      font-size:10px;
+      background:#eee;
+      border-radius:999px;
+      padding:4px 7px;
+      margin:6px 4px 0 0
+    }
+
+    .danger{
+      color:var(--bad);
+      background:#fff0ef
+    }
+
+    .linkbtn{
+      background:none;
+      padding:0;
+      color:#555;
+      text-decoration:underline
+    }
+
+    @media(min-width:681px){
+      nav{
+        max-width:680px;
+        left:50%;
+        transform:translateX(-50%)
+      }
+    }
   </style>
 </head>
+
 <body>
+
 <div class="app">
-<header><h1>My AI Wordbook</h1><div class="sub" id="headerSub">TOEIC向け・自分専用AI単語帳</div></header>
+
+<header>
+  <h1>My AI Wordbook</h1>
+  <div class="sub" id="headerSub">
+    TOEIC向け・自分専用AI単語帳
+  </div>
+</header>
+
 <main>
+
+<!-- ホーム -->
 <section id="home" class="screen active">
+
   <div class="panel hero">
     <div class="mini">今日の復習</div>
-    <div style="font-size:42px;font-weight:850;margin:4px 0" id="dueCount">0</div>
+
+    <div style="font-size:42px;font-weight:850;margin:4px 0" id="dueCount">
+      0
+    </div>
+
     <div class="mini">復習待ちの単語</div>
+
     <div style="height:14px"></div>
-    <button class="primary" id="startBtn">今日の学習を開始</button>
+
+    <button class="primary" id="startBtn">
+      今日の学習を開始
+    </button>
   </div>
+
   <div class="panel">
-    <div class="mini" style="margin-bottom:10px">学習状況</div>
+    <div class="mini" style="margin-bottom:10px">
+      学習状況
+    </div>
+
     <div class="statgrid">
-      <div class="stat"><b id="totalCount">0</b><span>登録語</span></div>
-      <div class="stat"><b id="masteredCount">0</b><span>定着語</span></div>
-      <div class="stat"><b id="weakCount">0</b><span>苦手</span></div>
+
+      <div class="stat">
+        <b id="totalCount">0</b>
+        <span>登録語</span>
+      </div>
+
+      <div class="stat">
+        <b id="masteredCount">0</b>
+        <span>定着語</span>
+      </div>
+
+      <div class="stat">
+        <b id="weakCount">0</b>
+        <span>苦手</span>
+      </div>
+
     </div>
   </div>
+
   <div class="panel">
-    <div class="mini" style="margin-bottom:10px">単語帳</div>
+    <div class="mini" style="margin-bottom:10px">
+      単語帳
+    </div>
+
     <div id="deckList"></div>
   </div>
+
 </section>
 
+
+<!-- 追加 -->
 <section id="add" class="screen">
+
   <div class="panel">
-    <h2 style="margin:0 0 16px;font-size:20px">単語を追加</h2>
-    <label for="wordInput">英単語</label>
-    <input id="wordInput" autocomplete="off" autocapitalize="none" placeholder="例：abundant">
+
+    <h2 style="margin:0 0 16px;font-size:20px">
+      単語を追加
+    </h2>
+
+    <label for="wordInput">
+      英単語
+    </label>
+
+    <input
+      id="wordInput"
+      autocomplete="off"
+      autocapitalize="none"
+      placeholder="例：abundant"
+    >
+
     <div style="height:10px"></div>
-    <label for="deckSelect">単語帳</label>
+
+    <label for="deckSelect">
+      単語帳
+    </label>
+
     <select id="deckSelect"></select>
+
     <div style="height:12px"></div>
-    <button class="primary" id="addWordBtn">AIで翻訳してカードを作成</button>
-    <p class="mini" style="line-height:1.6;margin-bottom:0">日本語訳・品詞・発音記号・例文・例文訳・TOEIC重要度・推奨レベルをAIが生成します。</p>
+
+    <button class="primary" id="addWordBtn">
+      AIで翻訳してカードを作成
+    </button>
+
+    <p class="mini" style="line-height:1.6;margin-bottom:0">
+      日本語訳・品詞・発音記号・例文・例文訳・TOEIC重要度・推奨レベルをAIが生成します。
+    </p>
+
   </div>
+
   <div class="panel">
-    <h3 style="margin-top:0">設定</h3>
-    <label for="apiKey">OpenAI APIキー</label>
-    <input id="apiKey" type="password" autocomplete="off" placeholder="sk-...">
-    <div style="height:10px"></div>
-    <label for="model">AIモデル</label>
-    <input id="model" value="gpt-6-luna">
-    <button class="secondary" id="saveSettingsBtn" style="margin-top:10px;width:100%">設定を保存</button>
-    <p class="mini" style="line-height:1.6">この簡易版ではAPIキーをこのブラウザのローカル保存領域に保存します。個人利用向けです。公開サイトで他人に配布する用途には使用しないでください。</p>
+
+    <h3 style="margin-top:0">
+      AI設定
+    </h3>
+
+    <p class="mini" style="line-height:1.7;margin-bottom:0">
+      Gemini AIを使用して単語カードを作成します。
+      APIキーはCloudflare Worker側で管理されるため、
+      このページにAPIキーを入力する必要はありません。
+    </p>
+
   </div>
+
 </section>
 
+
+<!-- 学習 -->
 <section id="study" class="screen">
-  <div id="studyEmpty" class="panel empty">復習する単語がありません。<br>単語を追加してください。</div>
+
+  <div id="studyEmpty" class="panel empty">
+    復習する単語がありません。<br>
+    単語を追加してください。
+  </div>
+
   <div id="studyCard" class="panel hero hidden">
-    <div class="mini" style="text-align:center" id="studyProgress"></div>
+
+    <div
+      class="mini"
+      style="text-align:center"
+      id="studyProgress">
+    </div>
+
     <div class="word" id="studyWord"></div>
-    <div class="tap" id="tapHint">タップして答えを表示</div>
+
+    <div class="tap" id="tapHint">
+      タップして答えを表示
+    </div>
+
     <div id="answerArea" class="hidden">
-      <button class="speak" id="speakBtn">▶ 発音</button>
+
+      <button class="speak" id="speakBtn">
+        ▶ 発音
+      </button>
+
       <div class="meaning" id="studyMeaning"></div>
+
       <div class="meta" id="studyMeta"></div>
-      <div class="example"><div id="studyExample"></div><div class="example-ja" id="studyExampleJa"></div></div>
-      <div class="rates">
-        <button class="rate bad" data-rating="again">×<small>覚えていない</small></button>
-        <button class="rate mid" data-rating="hard">△<small>あやふや</small></button>
-        <button class="rate good" data-rating="good">○<small>覚えた</small></button>
+
+      <div class="example">
+        <div id="studyExample"></div>
+        <div class="example-ja" id="studyExampleJa"></div>
       </div>
+
+      <div class="rates">
+
+        <button class="rate bad" data-rating="again">
+          ×
+          <small>覚えていない</small>
+        </button>
+
+        <button class="rate mid" data-rating="hard">
+          △
+          <small>あやふや</small>
+        </button>
+
+        <button class="rate good" data-rating="good">
+          ○
+          <small>覚えた</small>
+        </button>
+
+      </div>
+
     </div>
+
   </div>
+
 </section>
 
+
+<!-- 単語帳 -->
 <section id="words" class="screen">
-  <div class="panel">
-    <div class="row"><input id="searchInput" placeholder="単語を検索"><select id="filterDeck"></select></div>
-  </div>
-  <div class="panel" id="wordList"></div>
-</section>
 
-<section id="settings" class="screen">
   <div class="panel">
-    <h2 style="margin-top:0">設定</h2>
-    <label>データ</label>
+
     <div class="row">
-      <button class="secondary" id="exportBtn">バックアップ</button>
-      <button class="secondary" id="importBtn">復元</button>
-      <input id="importFile" type="file" accept=".json" class="hidden">
-    </div>
-    <div style="height:10px"></div>
-    <button class="secondary danger" id="clearBtn" style="width:100%">全単語を削除</button>
-  </div>
-  <div class="panel">
-    <h3 style="margin-top:0">SRS</h3>
-    <p class="mini" style="line-height:1.7">×：復習レベルをリセットして早期再出題<br>△：間隔を短くして再出題<br>○：間隔を延長</p>
-    <p class="mini">基本間隔：1日 → 3日 → 7日 → 14日 → 30日 → 60日</p>
-  </div>
-</section>
-</main>
-<nav>
-  <button data-screen="home" class="nav-active">ホーム</button>
-  <button data-screen="add">＋追加</button>
-  <button data-screen="words">単語帳</button>
-  <button data-screen="settings">設定</button>
-</nav>
-<div class="toast" id="toast"></div>
-</div>
-<script>
-const KEY='my_ai_wordbook_v1';
-const SETTINGS='my_ai_wordbook_settings_v1';
-let data=JSON.parse(localStorage.getItem(KEY)||'{"words":[],"decks":["TOEIC 600","TOEIC 700","TOEIC 800","TOEIC 900","自分で作った単語"]}');
-let settings=JSON.parse(localStorage.getItem(SETTINGS)||'{}');
-let queue=[], currentIndex=0, currentWord=null;
 
-function save(){localStorage.setItem(KEY,JSON.stringify(data));}
-function saveSettings(){localStorage.setItem(SETTINGS,JSON.stringify(settings));}
-function toast(s){const t=document.getElementById('toast');t.textContent=s;t.style.display='block';clearTimeout(window._toast);window._toast=setTimeout(()=>t.style.display='none',2400)}
-function today(){return new Date().toISOString().slice(0,10)}
-function due(w){return !w.nextReview || w.nextReview<=Date.now()}
-function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+      <input
+        id="searchInput"
+        placeholder="単語を検索"
+      >
+
+      <select id="filterDeck"></select>
+
+    </div>
+
+  </div>
+
+  <div class="panel" id="wordList"></div>
+
+</section>
+
+
+<!-- 設定 -->
+<section id="settings" class="screen">
+
+  <div class="panel">
+
+    <h2 style="margin-top:0">
+      設定
+    </h2>
+
+    <label>
+      データ
+    </label>
+
+    <div class="row">
+
+      <button class="secondary" id="exportBtn">
+        バックアップ
+      </button>
+
+      <button class="secondary" id="importBtn">
+        復元
+      </button>
+
+      <input
+        id="importFile"
+        type="file"
+        accept=".json"
+        class="hidden"
+      >
+
+    </div>
+
+    <div style="height:10px"></div>
+
+    <button
+      class="secondary danger"
+      id="clearBtn"
+      style="width:100%"
+    >
+      全単語を削除
+    </button>
+
+  </div>
+
+  <div class="panel">
+
+    <h3 style="margin-top:0">
+      SRS
+    </h3>
+
+    <p class="mini" style="line-height:1.7">
+      ×：復習レベルをリセットして早期再出題<br>
+      △：間隔を短くして再出題<br>
+      ○：間隔を延長
+    </p>
+
+    <p class="mini">
+      基本間隔：1日 → 3日 → 7日 → 14日 → 30日 → 60日
+    </p>
+
+  </div>
+
+</section>
+
+</main>
+
+
+<!-- ナビ -->
+<nav>
+
+  <button data-screen="home" class="nav-active">
+    ホーム
+  </button>
+
+  <button data-screen="add">
+    ＋追加
+  </button>
+
+  <button data-screen="words">
+    単語帳
+  </button>
+
+  <button data-screen="settings">
+    設定
+  </button>
+
+</nav>
+
+
+<div class="toast" id="toast"></div>
+
+</div>
+
+
+<script>
+
+/* =========================
+   基本設定
+========================= */
+
+const KEY = 'my_ai_wordbook_v1';
+
+/*
+ * Cloudflare Worker
+ */
+const WORKER_URL =
+  'https://my-ai-wordbook-api.bayashi1028leftab.workers.dev';
+
+
+/* =========================
+   データ
+========================= */
+
+let data = JSON.parse(
+  localStorage.getItem(KEY) ||
+  '{"words":[],"decks":["TOEIC 600","TOEIC 700","TOEIC 800","TOEIC 900","自分で作った単語"]}'
+);
+
+let queue = [];
+let currentIndex = 0;
+let currentWord = null;
+
+
+/* =========================
+   保存
+========================= */
+
+function save(){
+  localStorage.setItem(
+    KEY,
+    JSON.stringify(data)
+  );
+}
+
+
+/* =========================
+   Toast
+========================= */
+
+function toast(s){
+
+  const t =
+    document.getElementById('toast');
+
+  t.textContent = s;
+  t.style.display = 'block';
+
+  clearTimeout(window._toast);
+
+  window._toast =
+    setTimeout(
+      () => t.style.display = 'none',
+      2400
+    );
+}
+
+
+/* =========================
+   日付
+========================= */
+
+function today(){
+  return new Date()
+    .toISOString()
+    .slice(0,10);
+}
+
+
+/* =========================
+   復習対象
+========================= */
+
+function due(w){
+
+  return !w.nextReview ||
+         w.nextReview <= Date.now();
+
+}
+
+
+/* =========================
+   HTMLエスケープ
+========================= */
+
+function esc(s){
+
+  return String(s ?? '')
+    .replace(
+      /[&<>"']/g,
+      m => ({
+        '&':'&amp;',
+        '<':'&lt;',
+        '>':'&gt;',
+        '"':'&quot;',
+        "'":'&#39;'
+      }[m])
+    );
+
+}
+
+
+/* =========================
+   全体描画
+========================= */
 
 function render(){
-  document.getElementById('dueCount').textContent=data.words.filter(due).length;
-  document.getElementById('totalCount').textContent=data.words.length;
-  document.getElementById('masteredCount').textContent=data.words.filter(w=>w.level>=4).length;
-  document.getElementById('weakCount').textContent=data.words.filter(w=>w.level<=1).length;
-  renderDecks(); renderWordFilters(); renderWords();
+
+  document.getElementById('dueCount')
+    .textContent =
+    data.words.filter(due).length;
+
+  document.getElementById('totalCount')
+    .textContent =
+    data.words.length;
+
+  document.getElementById('masteredCount')
+    .textContent =
+    data.words.filter(
+      w => w.level >= 4
+    ).length;
+
+  document.getElementById('weakCount')
+    .textContent =
+    data.words.filter(
+      w => w.level <= 1
+    ).length;
+
+  renderDecks();
+  renderWordFilters();
+  renderWords();
+
 }
+
+
+/* =========================
+   単語帳表示
+========================= */
+
 function renderDecks(){
-  const el=document.getElementById('deckList');
-  if(!data.decks.length){el.innerHTML='<div class="empty">単語帳がありません</div>';return}
-  el.innerHTML=data.decks.map(d=>{
-    const n=data.words.filter(w=>w.deck===d).length, dueN=data.words.filter(w=>w.deck===d&&due(w)).length;
-    return `<div class="deck"><div><b>${esc(d)}</b><span>${n}語 ・ 復習 ${dueN}語</span></div><button class="secondary" onclick="startDeck('${encodeURIComponent(d)}')">学習</button></div>`
-  }).join('');
+
+  const el =
+    document.getElementById('deckList');
+
+  if(!data.decks.length){
+
+    el.innerHTML =
+      '<div class="empty">単語帳がありません</div>';
+
+    return;
+
+  }
+
+  el.innerHTML =
+    data.decks.map(d => {
+
+      const n =
+        data.words.filter(
+          w => w.deck === d
+        ).length;
+
+      const dueN =
+        data.words.filter(
+          w =>
+            w.deck === d &&
+            due(w)
+        ).length;
+
+      return `
+        <div class="deck">
+
+          <div>
+            <b>${esc(d)}</b>
+            <span>
+              ${n}語 ・ 復習 ${dueN}語
+            </span>
+          </div>
+
+          <button
+            class="secondary"
+            onclick="startDeck('${encodeURIComponent(d)}')"
+          >
+            学習
+          </button>
+
+        </div>
+      `;
+
+    }).join('');
+
 }
-window.startDeck=function(enc){const d=decodeURIComponent(enc);startStudy(data.words.filter(w=>w.deck===d&&due(w)))}
+
+
+window.startDeck =
+function(enc){
+
+  const d =
+    decodeURIComponent(enc);
+
+  startStudy(
+    data.words.filter(
+      w =>
+        w.deck === d &&
+        due(w)
+    )
+  );
+
+};
+
+
+/* =========================
+   フィルター
+========================= */
 
 function renderWordFilters(){
-  const html='<option value="">すべて</option>'+data.decks.map(d=>`<option>${esc(d)}</option>`).join('');
-  document.getElementById('filterDeck').innerHTML=html;
-  document.getElementById('deckSelect').innerHTML=data.decks.map(d=>`<option>${esc(d)}</option>`).join('');
+
+  const html =
+    '<option value="">すべて</option>' +
+    data.decks
+      .map(
+        d =>
+          `<option>${esc(d)}</option>`
+      )
+      .join('');
+
+  document.getElementById(
+    'filterDeck'
+  ).innerHTML = html;
+
+  document.getElementById(
+    'deckSelect'
+  ).innerHTML =
+    data.decks
+      .map(
+        d =>
+          `<option>${esc(d)}</option>`
+      )
+      .join('');
+
 }
+
+
+/* =========================
+   単語一覧
+========================= */
+
 function renderWords(){
-  const q=(document.getElementById('searchInput').value||'').toLowerCase();
-  const deck=document.getElementById('filterDeck').value;
-  const arr=data.words.filter(w=>(!deck||w.deck===deck)&&(!q||w.word.toLowerCase().includes(q)||w.meaning.toLowerCase().includes(q)));
-  const el=document.getElementById('wordList');
-  if(!arr.length){el.innerHTML='<div class="empty">単語がありません</div>';return}
-  el.innerHTML=arr.slice().reverse().map(w=>`
-    <div class="list-item">
-      <div class="list-word">${esc(w.word)}</div>
-      <div class="list-meaning">${esc(w.meaning)}</div>
-      <span class="tag">${esc(w.deck)}</span><span class="tag">重要度 ${w.importance}/5</span><span class="tag">Lv.${w.level}</span>
-      <button class="linkbtn" style="float:right" onclick="deleteWord('${w.id}')">削除</button>
-    </div>`).join('');
+
+  const q =
+    (
+      document.getElementById(
+        'searchInput'
+      ).value || ''
+    ).toLowerCase();
+
+  const deck =
+    document.getElementById(
+      'filterDeck'
+    ).value;
+
+  const arr =
+    data.words.filter(
+      w =>
+        (!deck || w.deck === deck) &&
+        (
+          !q ||
+          w.word.toLowerCase()
+            .includes(q) ||
+          w.meaning.toLowerCase()
+            .includes(q)
+        )
+    );
+
+  const el =
+    document.getElementById(
+      'wordList'
+    );
+
+  if(!arr.length){
+
+    el.innerHTML =
+      '<div class="empty">単語がありません</div>';
+
+    return;
+
+  }
+
+  el.innerHTML =
+    arr.slice().reverse()
+      .map(w => `
+
+        <div class="list-item">
+
+          <div class="list-word">
+            ${esc(w.word)}
+          </div>
+
+          <div class="list-meaning">
+            ${esc(w.meaning)}
+          </div>
+
+          <span class="tag">
+            ${esc(w.deck)}
+          </span>
+
+          <span class="tag">
+            重要度 ${w.importance}/5
+          </span>
+
+          <span class="tag">
+            Lv.${w.level}
+          </span>
+
+          <button
+            class="linkbtn"
+            style="float:right"
+            onclick="deleteWord('${w.id}')"
+          >
+            削除
+          </button>
+
+        </div>
+
+      `).join('');
+
 }
-window.deleteWord=function(id){if(confirm('この単語を削除しますか？')){data.words=data.words.filter(w=>w.id!==id);save();render();toast('削除しました')}}
+
+
+window.deleteWord =
+function(id){
+
+  if(
+    confirm(
+      'この単語を削除しますか？'
+    )
+  ){
+
+    data.words =
+      data.words.filter(
+        w => w.id !== id
+      );
+
+    save();
+    render();
+
+    toast('削除しました');
+
+  }
+
+};
+
+
+/* =========================
+   画面切り替え
+========================= */
 
 function showScreen(id){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('active',s.id===id));
-  document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('nav-active',b.dataset.screen===id));
-  if(id==='home')render();
-  if(id==='words')renderWords();
-}
-document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>showScreen(b.dataset.screen));
-document.getElementById('searchInput').oninput=renderWords;
-document.getElementById('filterDeck').onchange=renderWords;
 
-document.getElementById('saveSettingsBtn').onclick=()=>{
-  settings.apiKey=document.getElementById('apiKey').value.trim();
-  settings.model=document.getElementById('model').value.trim()||'gpt-6-luna';
-  saveSettings();toast('設定を保存しました');
-};
+  document
+    .querySelectorAll('.screen')
+    .forEach(
+      s =>
+        s.classList.toggle(
+          'active',
+          s.id === id
+        )
+    );
+
+  document
+    .querySelectorAll('nav button')
+    .forEach(
+      b =>
+        b.classList.toggle(
+          'nav-active',
+          b.dataset.screen === id
+        )
+    );
+
+  if(id === 'home')
+    render();
+
+  if(id === 'words')
+    renderWords();
+
+}
+
+
+document
+  .querySelectorAll('nav button')
+  .forEach(
+    b =>
+      b.onclick =
+        () =>
+          showScreen(
+            b.dataset.screen
+          )
+  );
+
+
+document.getElementById(
+  'searchInput'
+).oninput = renderWords;
+
+
+document.getElementById(
+  'filterDeck'
+).onchange = renderWords;
+
+
+/* =========================
+   Gemini / Cloudflare Worker
+========================= */
 
 async function createCard(word){
-  if(!settings.apiKey)throw new Error('OpenAI APIキーを「追加」画面の設定欄に入力してください。');
-  const schema={type:'object',additionalProperties:false,properties:{
-    word:{type:'string'},meaning:{type:'string'},part_of_speech:{type:'string'},
-    pronunciation:{type:'string'},example:{type:'string'},example_japanese:{type:'string'},
-    importance:{type:'integer',minimum:1,maximum:5},
-    recommended_level:{type:'string',enum:['TOEIC 600','TOEIC 700','TOEIC 800','TOEIC 900']}
-  },required:['word','meaning','part_of_speech','pronunciation','example','example_japanese','importance','recommended_level']};
-  const body={
-    model:settings.model||'gpt-6-luna',
-    input:[
-      {role:'system',content:[{type:'input_text',text:'あなたは日本人のTOEIC学習者向け英単語帳の編集者です。入力された英単語について、TOEIC学習で最も役立つ代表的な日本語訳を優先してください。意味を不必要に大量列挙しないでください。例文は自然でTOEICで使われやすい英文にしてください。importanceはTOEIC学習上の重要度を1-5で評価し、recommended_levelは学習開始の目安です。出力は指定JSONのみ。'}]},
-      {role:'user',content:[{type:'input_text',text:`英単語: ${word}`}]}],
-    text:{format:{type:'json_schema',name:'word_card',strict:true,schema}}
-  };
-  const r=await fetch('https://api.openai.com/v1/responses',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+settings.apiKey},body:JSON.stringify(body)});
-  if(!r.ok){const x=await r.text();throw new Error('OpenAI APIエラー: '+x.slice(0,300))}
-  const j=await r.json();
-  let raw=j.output_text;
-  if(!raw && j.output?.[0]?.content?.[0]?.text)raw=j.output[0].content[0].text;
-  if(!raw)throw new Error('AIの応答を取得できませんでした。');
-  return JSON.parse(raw);
-}
-document.getElementById('addWordBtn').onclick=async()=>{
-  const input=document.getElementById('wordInput'), word=input.value.trim();
-  if(!word)return toast('英単語を入力してください');
-  const btn=document.getElementById('addWordBtn');btn.disabled=true;btn.textContent='AIがカードを作成中…';
+
+  const response =
+    await fetch(
+      WORKER_URL,
+      {
+        method:'POST',
+
+        headers:{
+          'Content-Type':
+            'application/json'
+        },
+
+        body:
+          JSON.stringify({
+            word: word
+          })
+      }
+    );
+
+
+  let result;
+
   try{
-    const c=await createCard(word);
-    const exists=data.words.find(w=>w.word.toLowerCase()===c.word.toLowerCase());
-    if(exists){toast('その単語はすでに登録されています');return}
-    const deck=document.getElementById('deckSelect').value;
-    data.words.push({id:crypto.randomUUID(),word:c.word,meaning:c.meaning,partOfSpeech:c.part_of_speech,pronunciation:c.pronunciation,example:c.example,exampleJapanese:c.example_japanese,importance:c.importance,recommendedLevel:c.recommended_level,deck,level:0,reviews:0,nextReview:Date.now(),lastRating:null,createdAt:Date.now()});
-    save();input.value='';render();toast('カードを作成しました');
+
+    result =
+      await response.json();
+
+  }catch{
+
+    throw new Error(
+      'Cloudflare Workerから正常なJSONを取得できませんでした。'
+    );
+
+  }
+
+
+  if(!response.ok){
+
+    const detail =
+      result.details
+        ? JSON.stringify(
+            result.details
+          )
+        : '';
+
+    throw new Error(
+      'AI APIエラー: ' +
+      (
+        result.error ||
+        result.message ||
+        detail ||
+        '不明なエラー'
+      )
+    );
+
+  }
+
+
+  if(
+    !result.word ||
+    !result.meaning
+  ){
+
+    throw new Error(
+      'AIから単語カードの情報を取得できませんでした。'
+    );
+
+  }
+
+
+  /*
+   * Worker側のJSONを
+   * アプリ内部の形式に変換
+   */
+
+  return {
+
+    word:
+      result.word,
+
+    meaning:
+      result.meaning,
+
+    part_of_speech:
+      result.part_of_speech,
+
+    pronunciation:
+      result.pronunciation,
+
+    example:
+      result.example_sentence,
+
+    example_japanese:
+      result.example_translation,
+
+    importance:
+      Number(
+        result.toeic_importance
+      ),
+
+    recommended_level:
+      'TOEIC ' +
+      result.toeic_level
+
+  };
+
+}
+
+
+/* =========================
+   単語追加
+========================= */
+
+document.getElementById(
+  'addWordBtn'
+).onclick =
+async function(){
+
+  const input =
+    document.getElementById(
+      'wordInput'
+    );
+
+  const word =
+    input.value.trim();
+
+
+  if(!word){
+
+    toast(
+      '英単語を入力してください'
+    );
+
+    return;
+
+  }
+
+
+  const btn =
+    document.getElementById(
+      'addWordBtn'
+    );
+
+  btn.disabled = true;
+
+  btn.textContent =
+    'AIがカードを作成中…';
+
+
+  try{
+
+    const c =
+      await createCard(word);
+
+
+    const exists =
+      data.words.find(
+        w =>
+          w.word.toLowerCase() ===
+          c.word.toLowerCase()
+      );
+
+
+    if(exists){
+
+      toast(
+        'その単語はすでに登録されています'
+      );
+
+      return;
+
+    }
+
+
+    const deck =
+      document.getElementById(
+        'deckSelect'
+      ).value;
+
+
+    data.words.push({
+
+      id:
+        crypto.randomUUID(),
+
+      word:
+        c.word,
+
+      meaning:
+        c.meaning,
+
+      partOfSpeech:
+        c.part_of_speech,
+
+      pronunciation:
+        c.pronunciation,
+
+      example:
+        c.example,
+
+      exampleJapanese:
+        c.example_japanese,
+
+      importance:
+        c.importance,
+
+      recommendedLevel:
+        c.recommended_level,
+
+      deck:
+        deck,
+
+      level:
+        0,
+
+      reviews:
+        0,
+
+      nextReview:
+        Date.now(),
+
+      lastRating:
+        null,
+
+      createdAt:
+        Date.now()
+
+    });
+
+
+    save();
+
+    input.value = '';
+
+    render();
+
+    toast(
+      'カードを作成しました'
+    );
+
     showScreen('words');
-  }catch(e){alert(e.message)}
-  finally{btn.disabled=false;btn.textContent='AIで翻訳してカードを作成'}
+
+
+  }catch(e){
+
+    console.error(e);
+
+    alert(
+      'カード作成に失敗しました。\n\n' +
+      e.message
+    );
+
+  }finally{
+
+    btn.disabled = false;
+
+    btn.textContent =
+      'AIで翻訳してカードを作成';
+
+  }
+
 };
 
-function startStudy(words=data.words.filter(due)){
-  queue=words.slice().sort(()=>Math.random()-.5).slice(0,20);currentIndex=0;
-  showScreen('study');renderStudy();
+
+/* =========================
+   学習開始
+========================= */
+
+function startStudy(
+  words =
+    data.words.filter(due)
+){
+
+  queue =
+    words
+      .slice()
+      .sort(
+        () => Math.random() - .5
+      )
+      .slice(0,20);
+
+  currentIndex = 0;
+
+  showScreen('study');
+
+  renderStudy();
+
 }
-document.getElementById('startBtn').onclick=()=>startStudy();
+
+
+document.getElementById(
+  'startBtn'
+).onclick =
+  () => startStudy();
+
+
+/* =========================
+   学習カード表示
+========================= */
 
 function renderStudy(){
-  const empty=document.getElementById('studyEmpty'), card=document.getElementById('studyCard');
-  if(!queue.length){empty.classList.remove('hidden');card.classList.add('hidden');return}
-  empty.classList.add('hidden');card.classList.remove('hidden');
-  currentWord=queue[currentIndex];
-  document.getElementById('studyProgress').textContent=`${currentIndex+1} / ${queue.length}`;
-  document.getElementById('studyWord').textContent=currentWord.word;
-  document.getElementById('answerArea').classList.add('hidden');
-  document.getElementById('tapHint').classList.remove('hidden');
+
+  const empty =
+    document.getElementById(
+      'studyEmpty'
+    );
+
+  const card =
+    document.getElementById(
+      'studyCard'
+    );
+
+
+  if(!queue.length){
+
+    empty.classList.remove(
+      'hidden'
+    );
+
+    card.classList.add(
+      'hidden'
+    );
+
+    return;
+
+  }
+
+
+  empty.classList.add(
+    'hidden'
+  );
+
+  card.classList.remove(
+    'hidden'
+  );
+
+
+  currentWord =
+    queue[currentIndex];
+
+
+  document.getElementById(
+    'studyProgress'
+  ).textContent =
+    `${currentIndex + 1} / ${queue.length}`;
+
+
+  document.getElementById(
+    'studyWord'
+  ).textContent =
+    currentWord.word;
+
+
+  document.getElementById(
+    'answerArea'
+  ).classList.add(
+    'hidden'
+  );
+
+
+  document.getElementById(
+    'tapHint'
+  ).classList.remove(
+    'hidden'
+  );
+
 }
-document.getElementById('studyCard').onclick=e=>{
-  if(e.target.closest('button'))return;
-  document.getElementById('answerArea').classList.remove('hidden');
-  document.getElementById('tapHint').classList.add('hidden');
-  document.getElementById('studyMeaning').textContent=currentWord.meaning;
-  document.getElementById('studyMeta').textContent=`${currentWord.partOfSpeech} ・ ${currentWord.pronunciation} ・ TOEIC重要度 ${currentWord.importance}/5`;
-  document.getElementById('studyExample').textContent=currentWord.example;
-  document.getElementById('studyExampleJa').textContent=currentWord.exampleJapanese;
+
+
+/* =========================
+   答え表示
+========================= */
+
+document.getElementById(
+  'studyCard'
+).onclick =
+function(e){
+
+  if(
+    e.target.closest('button')
+  )
+    return;
+
+
+  document.getElementById(
+    'answerArea'
+  ).classList.remove(
+    'hidden'
+  );
+
+
+  document.getElementById(
+    'tapHint'
+  ).classList.add(
+    'hidden'
+  );
+
+
+  document.getElementById(
+    'studyMeaning'
+  ).textContent =
+    currentWord.meaning;
+
+
+  document.getElementById(
+    'studyMeta'
+  ).textContent =
+    `${currentWord.partOfSpeech} ・ ${currentWord.pronunciation} ・ TOEIC重要度 ${currentWord.importance}/5`;
+
+
+  document.getElementById(
+    'studyExample'
+  ).textContent =
+    currentWord.example;
+
+
+  document.getElementById(
+    'studyExampleJa'
+  ).textContent =
+    currentWord.exampleJapanese;
+
 };
-document.getElementById('speakBtn').onclick=e=>{
-  e.stopPropagation();speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(currentWord.word);u.lang='en-US';u.rate=.85;speechSynthesis.speak(u)
+
+
+/* =========================
+   発音
+========================= */
+
+document.getElementById(
+  'speakBtn'
+).onclick =
+function(e){
+
+  e.stopPropagation();
+
+  speechSynthesis.cancel();
+
+  const u =
+    new SpeechSynthesisUtterance(
+      currentWord.word
+    );
+
+  u.lang = 'en-US';
+
+  u.rate = .85;
+
+  speechSynthesis.speak(u);
+
 };
-document.querySelectorAll('.rate').forEach(b=>b.onclick=e=>{
-  e.stopPropagation();rateWord(b.dataset.rating);
-});
+
+
+/* =========================
+   評価
+========================= */
+
+document
+  .querySelectorAll('.rate')
+  .forEach(
+    b =>
+      b.onclick =
+      e => {
+
+        e.stopPropagation();
+
+        rateWord(
+          b.dataset.rating
+        );
+
+      }
+  );
+
+
 function rateWord(r){
-  const w=currentWord;
+
+  const w =
+    currentWord;
+
   let days;
-  if(r==='again'){w.level=0;days=0;w.nextReview=Date.now()+10*60*1000}
-  else if(r==='hard'){w.level=Math.max(1,w.level);days=[1,1,2,4,7,14,30][Math.min(w.level,6)]}
-  else{w.level=Math.min(6,w.level+1);days=[1,3,7,14,30,60,120][w.level]}
-  w.reviews++;w.lastRating=r;
-  if(r!=='again')w.nextReview=Date.now()+days*86400000;
-  save();currentIndex++;
-  if(currentIndex>=queue.length){queue=[];toast('今日の学習が終了しました');showScreen('home');render()}else renderStudy();
+
+
+  if(r === 'again'){
+
+    w.level = 0;
+
+    days = 0;
+
+    w.nextReview =
+      Date.now() +
+      10 * 60 * 1000;
+
+  }
+
+  else if(r === 'hard'){
+
+    w.level =
+      Math.max(
+        1,
+        w.level
+      );
+
+    days =
+      [1,1,2,4,7,14,30]
+      [
+        Math.min(
+          w.level,
+          6
+        )
+      ];
+
+  }
+
+  else{
+
+    w.level =
+      Math.min(
+        6,
+        w.level + 1
+      );
+
+    days =
+      [1,3,7,14,30,60,120]
+      [w.level];
+
+  }
+
+
+  w.reviews++;
+
+  w.lastRating = r;
+
+
+  if(r !== 'again'){
+
+    w.nextReview =
+      Date.now() +
+      days * 86400000;
+
+  }
+
+
+  save();
+
+  currentIndex++;
+
+
+  if(
+    currentIndex >= queue.length
+  ){
+
+    queue = [];
+
+    toast(
+      '今日の学習が終了しました'
+    );
+
+    showScreen('home');
+
+    render();
+
+  }else{
+
+    renderStudy();
+
+  }
+
 }
 
-document.getElementById('exportBtn').onclick=()=>{
-  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='my-ai-wordbook-backup.json';a.click();URL.revokeObjectURL(a.href);
-};
-document.getElementById('importBtn').onclick=()=>document.getElementById('importFile').click();
-document.getElementById('importFile').onchange=async e=>{
-  const f=e.target.files[0];if(!f)return;
-  try{const x=JSON.parse(await f.text());if(!Array.isArray(x.words)||!Array.isArray(x.decks))throw Error();data=x;save();render();toast('復元しました')}catch{alert('バックアップファイルが正しくありません')}
-};
-document.getElementById('clearBtn').onclick=()=>{
-  if(confirm('本当に全単語を削除しますか？')){data.words=[];save();render();toast('全単語を削除しました')}
+
+/* =========================
+   バックアップ
+========================= */
+
+document.getElementById(
+  'exportBtn'
+).onclick =
+function(){
+
+  const blob =
+    new Blob(
+      [
+        JSON.stringify(
+          data,
+          null,
+          2
+        )
+      ],
+      {
+        type:
+          'application/json'
+      }
+    );
+
+
+  const a =
+    document.createElement(
+      'a'
+    );
+
+  a.href =
+    URL.createObjectURL(
+      blob
+    );
+
+  a.download =
+    'my-ai-wordbook-backup.json';
+
+  a.click();
+
+  URL.revokeObjectURL(
+    a.href
+  );
+
 };
 
-if ('serviceWorker' in navigator) window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
-document.getElementById('apiKey').value=settings.apiKey||'';
-document.getElementById('model').value=settings.model||'gpt-6-luna';
+
+/* =========================
+   バックアップ復元
+========================= */
+
+document.getElementById(
+  'importBtn'
+).onclick =
+  () =>
+    document.getElementById(
+      'importFile'
+    ).click();
+
+
+document.getElementById(
+  'importFile'
+).onchange =
+async function(e){
+
+  const f =
+    e.target.files[0];
+
+  if(!f)
+    return;
+
+
+  try{
+
+    const x =
+      JSON.parse(
+        await f.text()
+      );
+
+
+    if(
+      !Array.isArray(x.words) ||
+      !Array.isArray(x.decks)
+    ){
+
+      throw Error();
+
+    }
+
+
+    data = x;
+
+    save();
+
+    render();
+
+    toast(
+      '復元しました'
+    );
+
+
+  }catch{
+
+    alert(
+      'バックアップファイルが正しくありません'
+    );
+
+  }
+
+};
+
+
+/* =========================
+   全削除
+========================= */
+
+document.getElementById(
+  'clearBtn'
+).onclick =
+function(){
+
+  if(
+    confirm(
+      '本当に全単語を削除しますか？'
+    )
+  ){
+
+    data.words = [];
+
+    save();
+
+    render();
+
+    toast(
+      '全単語を削除しました'
+    );
+
+  }
+
+};
+
+
+/* =========================
+   Service Worker
+========================= */
+
+if(
+  'serviceWorker' in navigator
+){
+
+  window.addEventListener(
+    'load',
+    () =>
+      navigator.serviceWorker
+        .register('./sw.js')
+        .catch(
+          () => {}
+        )
+  );
+
+}
+
+
+/* =========================
+   初期化
+========================= */
+
 render();
+
 </script>
+
 </body>
 </html>
