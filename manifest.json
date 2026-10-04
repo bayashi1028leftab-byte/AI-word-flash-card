@@ -1,0 +1,10 @@
+{
+  "name": "My AI Wordbook",
+  "short_name": "AI単語帳",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f6f6f6",
+  "theme_color": "#111111",
+  "lang": "ja",
+  "icons": []
+}
